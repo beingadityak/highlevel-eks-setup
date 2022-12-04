@@ -23,6 +23,8 @@ locals {
       iam_role_attach_cni_policy = true
       iam_role_tags              = var.resource_tags
 
+      iam_role_additional_policies = pool.iam_role_additional_policies
+
       capacity_type  = pool.capacity_type
       instance_types = pool.instance_types
       desired_size   = pool.desired_size

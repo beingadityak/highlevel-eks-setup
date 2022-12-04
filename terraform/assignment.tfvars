@@ -9,6 +9,7 @@ node_group_map = {
     labels = {
       role = "application"
     }
+    iam_role_additional_policies = ["arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy", "arn:aws:iam::aws:policy/CloudWatchReadOnlyAccess"]
     taints                       = []
     create_launch_template       = true
     update_config = {
