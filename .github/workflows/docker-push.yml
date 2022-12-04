@@ -5,7 +5,8 @@ on:
     branches:
       - "main"
     paths:
-      - "app/"
+      - "app/**"
+      - ".github/workflows/docker-push.yml"
 
 permissions:
   id-token: write
