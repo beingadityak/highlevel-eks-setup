@@ -1,0 +1,12 @@
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: keda-operator
+  # Specifies whether a service account should automount API-Credentials
+  automountServiceAccountToken: true
+  # Annotations to add to the service account
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::572048952197:role/assignment-eks-cluster--keda--operator-role"
+    eks.amazonaws.com/audience: sts.amazonaws.com

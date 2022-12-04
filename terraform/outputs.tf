@@ -64,3 +64,8 @@ output "aws_lb_controller_role_arn" {
   description = "Role ARN for AWS LB controller to be used with Helm values"
   value       = aws_iam_role.eks_aws_lb_controller_pod_role.arn
 }
+
+output "keda_role_arn" {
+  description = "Role ARN for KEDA to be used with Helm values"
+  value       = aws_iam_role.eks_keda_operator_role.arn
+}

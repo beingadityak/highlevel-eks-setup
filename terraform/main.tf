@@ -441,3 +441,70 @@ resource "aws_iam_role_policy" "eks_aws_lb_controller_policy" {
   }
   EOF
 }
+
+resource "aws_iam_role" "eks_keda_operator_role" {
+  name = "${local.cluster_name}--keda--operator-role"
+
+  assume_role_policy = <<-EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Principal": {
+          "Federated": "${module.eks.oidc_provider_arn}"
+        },
+        "Action": "sts:AssumeRoleWithWebIdentity",
+        "Condition": {
+          "StringEquals": {
+            "${local.trimmed_cluster_oidc_url}:aud": "sts.amazonaws.com",
+            "${local.trimmed_cluster_oidc_url}:sub": "system:serviceaccount:keda:keda-operator"
+          }
+        }
+      }
+    ]
+  }
+  EOF
+
+  tags = var.resource_tags
+}
+
+resource "aws_iam_role_policy" "eks_keda_policy" {
+  name = "${local.cluster_name}--keda-policy"
+  role = aws_iam_role.eks_keda_operator_role.id
+
+  policy = <<-EOF
+  {
+      "Version": "2012-10-17",
+      "Statement": [
+          {
+              "Effect": "Allow",
+              "Action": [
+                  "autoscaling:Describe*",
+                  "cloudwatch:Describe*",
+                  "cloudwatch:Get*",
+                  "cloudwatch:List*",
+                  "logs:Get*",
+                  "logs:List*",
+                  "logs:StartQuery",
+                  "logs:StopQuery",
+                  "logs:Describe*",
+                  "logs:TestMetricFilter",
+                  "logs:FilterLogEvents",
+                  "oam:ListSinks",
+                  "sns:Get*",
+                  "sns:List*"
+              ],
+              "Resource": "*"
+          },
+          {
+            "Effect": "Allow",
+            "Action": [
+                "oam:ListAttachedLinks"
+            ],
+            "Resource": "arn:aws:oam:*:*:sink/*"
+          }
+      ]
+  }
+  EOF
+}

@@ -1,0 +1,29 @@
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: nodejs-app-hpa
+  namespace: applications
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nodejs-app
+  pollingInterval: 10 
+  cooldownPeriod: 20
+  fallback:
+    failureThreshold: 3
+    replicas: 0
+  minReplicaCount: 0
+  maxReplicaCount: 10
+  triggers:
+    - type: aws-cloudwatch
+      metadata:
+        namespace: AWS/ApplicationELB
+        dimensionName: LoadBalancer
+        dimensionValue: "app/k8s-applicat-nodejsap-7f19960637/72c8a644722fe0b2"
+        metricName: ActiveConnectionCount
+        targetMetricValue: '1'
+        minMetricValue: '0'
+        awsRegion: "us-west-2"
+        identityOwner: operator
