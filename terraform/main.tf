@@ -119,15 +119,6 @@ module "eks" {
 
   enable_irsa = true
 
-  manage_aws_auth_configmap = true
-  aws_auth_users = [
-    {
-      userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/k8s-user"
-      username = "k8s-user"
-      groups   = ["system:masters"]
-    }
-  ]
-
   cluster_addons = {
     coredns = {
       resolve_conflicts = "OVERWRITE"
@@ -251,4 +242,15 @@ resource "aws_security_group" "alb-ingress-sg" {
   tags = {
     Name = "${local.cluster_name}--alb-ingress-sg"
   }
+}
+
+resource "aws_ecr_repository" "nodejs_app" {
+  name                 = "nodejs-app"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  tags = var.resource_tags
 }
