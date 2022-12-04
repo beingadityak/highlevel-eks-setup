@@ -58,3 +58,9 @@ output "aws_auth_configmap_yaml" {
   description = "Formatted yaml output for base aws-auth configmap containing roles used in cluster node groups/fargate profiles"
   value       = module.eks.aws_auth_configmap_yaml
 }
+
+
+output "aws_lb_controller_role_arn" {
+  description = "Role ARN for AWS LB controller to be used with Helm values"
+  value       = aws_iam_role.eks_aws_lb_controller_pod_role.arn
+}

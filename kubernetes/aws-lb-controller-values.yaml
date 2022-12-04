@@ -1,0 +1,50 @@
+# Default values for aws-load-balancer-controller.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::572048952197:role/assignment-eks-cluster--aws-lb-controller--pod-role"
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: aws-load-balancer-controller
+
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# The name of the Kubernetes cluster. A non-empty value is required
+clusterName: assignment-eks-cluster
+
+# The ingress class this controller will satisfy. If not specified, controller will match all
+# ingresses without ingress class annotation and ingresses of type alb
+ingressClass: assignment-alb
+
+# ingressClassParams specify the IngressCLassParams that enforce settings for a set of Ingresses when using with ingress Controller.
+ingressClassParams:
+  create: true
+  # The name of ingressClassParams resource will be referred in ingressClass
+  name: assignment-alb
+
+# To use IngressClass resource instead of annotation, before you need to install the IngressClass resource pointing to controller.
+# If specified as true, the IngressClass resource will be created.
+createIngressClassResource: true
+
+# The AWS region for the kubernetes cluster. Set to use KIAM or kube2iam for example.
+region: us-west-2
+
+# The VPC ID for the Kubernetes cluster. Set this manually when your pods are unable to use the metadata service to determine this automatically
+vpcId: vpc-04a884c3a2f2234c6
+
+# Set the controller log level - info(default), debug (default "info")
+logLevel: info

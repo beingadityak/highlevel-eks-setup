@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: applications
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-app
+  namespace: applications
+spec:
+  selector:
+    matchLabels:
+      app: nodejs-app
+  template:
+    metadata:
+      labels:
+        app: nodejs-app
+    spec:
+      containers:
+      - name: app
+        image: 572048952197.dkr.ecr.us-west-2.amazonaws.com/nodejs-app:main
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "800m"
+        ports:
+        - containerPort: 8080
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: nodejs-app
+  namespace: applications
+spec:
+  selector:
+    app: nodejs-app
+  type: ClusterIP
+  ports:
+  - name: app
+    port: 8080
+    targetPort: 8080
