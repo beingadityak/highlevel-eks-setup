@@ -1,5 +1,11 @@
 # Helm installation instructions for KEDA in EKS cluster
 
+## Pre-requisites
+
+Make sure that you replace the IAM role annotation (under `serviceAccount`) for the KEDA operator in order to be able to query CloudWatch metrics for scaling actions.
+
+
+## Helm installation command
 Following command to be used for deploying KEDA in EKS cluster:
 
 ```
