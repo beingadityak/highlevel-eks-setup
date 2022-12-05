@@ -105,6 +105,20 @@ module "vpc" {
 #############  EKS Cluster Definition  ###################
 ##########################################################
 
+data "aws_eks_cluster" "default" {
+  name = module.eks.cluster_id
+}
+
+data "aws_eks_cluster_auth" "default" {
+  name = module.eks.cluster_id
+}
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.default.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.default.token
+}
+
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   version         = "18.31.2"
@@ -119,6 +133,15 @@ module "eks" {
   cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
 
   enable_irsa = true
+
+  manage_aws_auth_configmap = true
+  aws_auth_users            = [
+    {
+    userarn  = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/highlevel-readonly"
+    username = "highlevel-readonly"
+    groups   = ["	system:authenticated"]
+  }
+  ]
 
   cluster_addons = {
     coredns = {
