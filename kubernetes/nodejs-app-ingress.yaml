@@ -10,7 +10,7 @@ metadata:
     alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-2016-08
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
-    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
     alb.ingress.kubernetes.io/healthcheck-port: '8080'
     alb.ingress.kubernetes.io/healthcheck-path: /
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
@@ -24,11 +24,6 @@ spec:
   - host: 0b74ba2c-5a4e-4d2b-bb05-cfb44fa2b866.beingadityak.in
     http:
       paths:
-      - pathType: Prefix
-        path: /*
-        backend:
-          serviceName: ssl-redirect
-          servicePort: use-annotation
       - pathType: Prefix
         path: "/"
         backend:
