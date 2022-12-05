@@ -14,7 +14,7 @@ spec:
   fallback:
     failureThreshold: 3
     replicas: 0
-  minReplicaCount: 0
+  minReplicaCount: 1
   maxReplicaCount: 10
   triggers:
     - type: aws-cloudwatch
@@ -23,7 +23,13 @@ spec:
         dimensionName: LoadBalancer
         dimensionValue: "app/k8s-applicat-nodejsap-7f19960637/72c8a644722fe0b2"
         metricName: ActiveConnectionCount
-        targetMetricValue: '1'
+        targetMetricValue: '3'
         minMetricValue: '0'
         awsRegion: "us-west-2"
         identityOwner: operator
+    - type: cron
+      metadata:
+        timezone: Asia/Kolkata
+        start: 0 8 * * *
+        end: 59 19 * * *
+        desiredReplicas: "3"
